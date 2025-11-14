@@ -1,0 +1,45 @@
+create table lt8.Books(
+	book_id int primary key,
+	title text,
+	author varchar(100),
+	published_year int,
+	available boolean
+);
+create table lt8.Members(
+	member_id int primary key,
+	name varchar(100),
+	email varchar(100) unique,
+	join_date date DEFAULT current_date
+);
+
+---- Quan ly ban hang
+create table lt8.Products(
+	product_id serial primary key, 
+	product_name varchar(100),
+	price numeric(10,2),
+	stock_quantity int
+);
+create table lt8.Orders(
+	order_id serial primary key,
+	order_date date DEFAULT current_date,
+	member_id int REFERENCES lt8.Members(member_id)
+);
+create table lt8.orderDetails(
+	order_detail_id serial primary key,
+	order_id int REFERENCES lt8.Orders(order_id),
+	product_id int REFERENCES lt8.Products(product_id),
+	quantity int
+);
+
+
+alter table lt8.Books 
+-- 1
+add column genre varchar(100);
+--2 
+rename column available to is_available;
+--3
+alter table lt8.Members
+drop column email;
+--4 
+drop table sales.OrderDetail;
+
