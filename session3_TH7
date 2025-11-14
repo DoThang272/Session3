@@ -1,0 +1,19 @@
+
+---- Quan ly ban hang
+create table sales.Products(
+	product_id serial primary key, 
+	product_name varchar(100),
+	price numeric(10,2),
+	stock_quantity int
+);
+create table sales.Orders(
+	order_id serial primary key,
+	order_date date DEFAULT current_date,
+	member_id int REFERENCES library.Members(member_id)
+);
+create table sales.orderDetails(
+	order_detail_id serial primary key,
+	order_id int REFERENCES sales.Orders(order_id),
+	product_id int REFERENCES sales.Products(product_id),
+	quantity int
+);
