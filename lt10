@@ -1,0 +1,45 @@
+
+CREATE SCHEMA IF NOT EXISTS lt10;
+
+CREATE TABLE lt10.departments (
+    department_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    department_name VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE lt10.employees (
+    emp_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    dob DATE,
+    department_id INT,
+    CONSTRAINT fk_department
+        FOREIGN KEY (department_id)
+        REFERENCES lt10.departments(department_id)
+        ON DELETE SET NULL   -- nếu xóa phòng ban thì nhân viên vẫn còn
+);
+
+
+CREATE TABLE lt10.projects (
+    project_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    project_name VARCHAR(150) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    CONSTRAINT chk_date_range CHECK (
+        end_date IS NULL OR start_date IS NULL OR end_date >= start_date
+    )
+);
+
+CREATE TABLE lt10.employeeprojects (
+    emp_id INT NOT NULL,
+    project_id INT NOT NULL,
+
+    CONSTRAINT fk_ep_emp FOREIGN KEY (emp_id)
+        REFERENCES lt10.employees(emp_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_ep_project FOREIGN KEY (project_id)
+        REFERENCES lt10.projects(project_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT pk_employeeprojects PRIMARY KEY (emp_id, project_id)
+);
